@@ -1,4 +1,37 @@
-#Climate API
+#---Climate API---#
 
-import pandas as import pd
+#Dependencies
+
+import datetime as datetime
+import numpy as np
+import pandas as pd
+import sqlalchemy
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, func
+from flask import Flask, jsonify
+
+#-Database Setup-#
+
+#Connecting to DB
+engine = create_engine("sqlite:///Resources/hawaii.sqlite")
+Base = automap_base()
+Base.prepare(engine, reflect=True)
+
+#Test connection
+print(Base.classes.keys())
+
+#References to tables in DB
+Station = Base.classes.station
+Measurement = Base.classes.measurement
+
+#Create session
+
+session = Session(engine)
+
+#-Flask Setup-#
+
+
+
+
 
