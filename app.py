@@ -66,7 +66,9 @@ def precipitation():
     #query date
     query_date = dt.date(2017,8,23) - dt.timedelta(days=365)
     #query
-    precip_query = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= query_date).order_by(Measurement.date).all()
+    precip_query = session.query(Measurement.date, Measurement.prcp).\
+                   filter(Measurement.date >= query_date).\
+                   order_by(Measurement.date).all()
 
 
     #Create list of dictionaries; (Keys: 'date', Values: 'prcp')
@@ -74,8 +76,8 @@ def precipitation():
     #loop through the query to get data and save it in precip_list
     for item in precip_query:
         precip_dict = {}
-        precip_dict["date"] = precip_query[0]
-        precip_dict["prcp"] = precip_query[1]
+        precip_dict["date"] = item[0]
+        precip_dict["prcp"] = item[1]
         precip_list.append(precip_dict)
 
     #Return jsonified precip_list
@@ -96,6 +98,41 @@ def stations():
     stations_pd = pd.read_sql(stations_query.statement, stations_query.session.bind)
     #return jsonified dict of stations_pd
     return jsonify(stations_pd.to_dict())
+
+#- Route: "/api/temperature"
+
+#Route declaration
+@app.route("/api/temperature")
+
+#Function definition: 'temperature'
+def temperature():
+    """API Route Function that returns a list of Temperature observations(tobs) for the previous year."""
+
+    #Get the latest date in DB
+    latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+    #query date
+    query_year = dt.date(2017,8,23) - dt.timedelta(days=365)
+
+    #build query for temperature of last year
+    temp_query = session.query(Measurement.date, Measurement.tobs).\
+                 filter(Measurement.date >= query_year).\
+                 order_by(Measurement.date).all()
+
+    #Create a list of dictionaries; (Keys: "date", Values: "temperature")
+    temperatures = []
+
+    #loop through query object: temp_query
+    for temp in temp_query:
+        temp_dict = {}
+        temp_dict["date"] = temp[0]
+        temp_dict["tobs"] = temp[1]
+        temperatures.append(temp_dict)
+
+    #Return jsonified 'temperatures' list
+    return jsonify(temperatures)
+
+
+
 
 
 #Run
