@@ -30,8 +30,30 @@ Measurement = Base.classes.measurement
 session = Session(engine)
 
 #-Flask Setup-#
+app = Flask(__name__)
 
 
+#-Flask Routes-#
+
+#Route: '/'
+@app.route("/")
+def home():
+    print("Server received request for 'Home' page.")
+    return "Welcome to the Surfs Up Weather API."
+
+#Route: "/welcome"
+@app.route("/welcome")
+
+def welcome():
+    """List all available API Routes."""
+    
+    return (
+            f"Welcome to the Surfs Up API."
+            f"Available routes:<br>"
+            f"/api/precipitation<br>"
+            f"/api/stations"
+            f"/api/temperature"
+    )
 
 
 
