@@ -2,7 +2,7 @@
 
 #Dependencies
 
-import datetime as datetime
+import datetime as dt
 import numpy as np
 import pandas as pd
 import sqlalchemy
@@ -55,15 +55,25 @@ def welcome():
 
 @app.route("/api/precipitation")
 def precipitation():
-    """Api Route that returns dates and temperature observations for the last year."""
+    """Api Route that returns data for rainfall for the last year."""
 
     #Get the latest date in DB
     latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
     #query date
     query_date = dt.date(2017,8,23) - dt.timedelta(days=365)
     #query
+    precip_query = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= query_date).order_by(Measurement.date).all()
 
 
+    #Create list of dictionaries; (Keys: 'date', Values: 'prcp')
+    precip_list = []
+    #loop through the query to get data and save it in precip_list
+    for item in precip_query:
+        precip_dict = {}
+        precip_dict["date"] = precip_query[0]
+        precip_dict["prcp"] = precip_query[1]
+        precip_list.append(precip_dict)
 
-
+    #Return jsonified precip_list
+    return jsonify(precip_list)
 
