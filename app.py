@@ -47,9 +47,23 @@ def welcome():
             f"These are the available routes:<br>"
             f"Available routes:<br>"
             f"/api/precipitation<br>"
-            f"/api/stations"
-            f"/api/temperature"
+            f"/api/stations<br>"
+            f"/api/temperature<br>"
     )
+
+#Route: "/api/precipitation"
+
+@app.route("/api/precipitation")
+def precipitation():
+    """Api Route that returns dates and temperature observations for the last year."""
+
+    #Get the latest date in DB
+    latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+    #query date
+    query_date = dt.date(2017,8,23) - dt.timedelta(days=365)
+    #query
+
+
 
 
 
