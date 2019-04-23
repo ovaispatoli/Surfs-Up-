@@ -37,18 +37,14 @@ app = Flask(__name__)
 
 #Route: '/'
 @app.route("/")
-def home():
-    print("Server received request for 'Home' page.")
-    return "Welcome to the Surfs Up Weather API."
-
-#Route: "/welcome"
-@app.route("/welcome")
 
 def welcome():
     """List all available API Routes."""
     
     return (
-            f"Welcome to the Surfs Up API."
+            
+            f"Welcome to the Surfs Up API.<br>"
+            f"These are the available routes:<br>"
             f"Available routes:<br>"
             f"/api/precipitation<br>"
             f"/api/stations"
