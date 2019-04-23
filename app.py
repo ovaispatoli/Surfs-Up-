@@ -19,7 +19,7 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 
 #Test connection
-print(Base.classes.keys())
+#print(Base.classes.keys())
 
 #References to tables in DB
 Station = Base.classes.station
@@ -35,9 +35,10 @@ app = Flask(__name__)
 
 #-Flask Routes-#
 
-#Route: '/'
+#- Route: '/'
+#Route declaration
 @app.route("/")
-
+#Function Build: 'welcome'
 def welcome():
     """List all available API Routes."""
     
@@ -51,11 +52,14 @@ def welcome():
             f"/api/temperature<br>"
     )
 
-#Route: "/api/precipitation"
+#- Route: "/api/precipitation"
 
+#Route declaration
 @app.route("/api/precipitation")
+
+#Function build: 'precipitation'
 def precipitation():
-    """Api Route that returns data for rainfall for the last year."""
+    """Api Route Function that returns data of rainfall for the last year."""
 
     #Get the latest date in DB
     latest_date = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
@@ -77,3 +81,23 @@ def precipitation():
     #Return jsonified precip_list
     return jsonify(precip_list)
 
+#- Route: "/api/stations"
+
+#Route declaration
+@app.route("/api/stations")
+
+#Function definition: 'stations'
+
+def stations():
+    """API Route Function that returns a list of stations from data-set."""
+
+    #Get stations from DB
+    stations_query = session.query(Station.name, Station.station)
+    stations_pd = pd.read_sql(stations_query.statement, stations_query.session.bind)
+    #return jsonified dict of stations_pd
+    return jsonify(stations_pd.to_dict())
+
+
+#Run
+if __name__ == '__main__':
+    app.run(debug=True)
